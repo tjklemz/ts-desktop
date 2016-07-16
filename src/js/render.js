@@ -4,27 +4,51 @@ function Renderer() {
 
     return {
 
-        convertVerseMarkers: function (text) {
-            var startstr = '<verse number="';
-            var endstr = '" style="v" />';
-            var expression = new RegExp(startstr);
-            var verses = [];
+        // convertVerseMarkers: function (text) {
+        //     var startstr = '<verse number="';
+        //     var endstr = '" style="v" />';
+        //     var expression = new RegExp(startstr);
+        //     var verses = [];
 
-            while (expression.test(text)) {
-                var versestr = text.substring(text.search(startstr) + 15, text.search(endstr));
-                if (versestr.indexOf("-") < 0) {
-                    verses.push(parseInt(versestr));
-                } else {
-                    var firstnum = parseInt(versestr.substring(0, versestr.search("-")));
-                    var lastnum = parseInt(versestr.substring(versestr.search("-") + 1));
-                    for (var j = firstnum; j <= lastnum; j++) {
-                        verses.push(j);
-                    }
-                }
-                text = text.replace(startstr, " \\v ");
-                text = text.replace(endstr, " ");
-            }
-            return {text: text, verses: verses};
+        //     while (expression.test(text)) {
+        //         var versestr = text.substring(text.search(startstr) + 15, text.search(endstr));
+        //         if (versestr.indexOf("-") < 0) {
+        //             verses.push(parseInt(versestr));
+        //         } else {
+        //             var firstnum = parseInt(versestr.substring(0, versestr.search("-")));
+        //             var lastnum = parseInt(versestr.substring(versestr.search("-") + 1));
+        //             for (var j = firstnum; j <= lastnum; j++) {
+        //                 verses.push(j);
+        //             }
+        //         }
+        //         text = text.replace(startstr, " \\v ");
+        //         text = text.replace(endstr, " ");
+        //     }
+        //     return {text: text, verses: verses};
+        // },
+
+        convertVerseMarkers: function (str) {
+            var numbers = [];
+
+            var text = str.replace(/<verse\s[^]*?>/g, function (verse) {
+                var n;
+
+                verse.replace(/number="(.+?)"/, function (numberStr, number) {
+                    n = number.split('-').map(function (n) {
+                        numbers.push(n);
+                        return " \\v " + n;
+                    }).join('').concat(' ');
+                    return n;
+                });
+
+                return n;
+            });
+
+            var verses = numbers.map(function (number) {
+                return parseInt(number);
+            }).sort();
+
+            return {text, verses};
         },
 
         convertNoteMarkers: function (text) {
