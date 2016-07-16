@@ -30,18 +30,14 @@ function Renderer() {
         convertVerseMarkers: function (str) {
             var numbers = [];
 
-            var text = str.replace(/<verse\s[^]*?>/g, function (verse) {
-                var n;
+            var text = str.replace(/<verse\s[^]*?>/gi, function (verse) {
 
-                verse.replace(/number="(.+?)"/, function (numberStr, number) {
-                    n = number.split('-').map(function (n) {
-                        numbers.push(n);
-                        return " \\v " + n;
-                    }).join('').concat(' ');
-                    return n;
-                });
+                var number = verse.match(/number="(.+?)"/i)[1];
 
-                return n;
+                return number.split('-').map(function (n) {
+                    numbers.push(n);
+                    return " \\v " + n;
+                }).join('').concat(' ');
             });
 
             var verses = numbers.map(function (number) {
