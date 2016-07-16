@@ -36,8 +36,8 @@ function Renderer() {
 
                 return number.split('-').map(function (n) {
                     numbers.push(n);
-                    return " \\v " + n;
-                }).join('').concat(' ');
+                    return "\\v " + n;
+                }).join(' ').concat(' ');
             });
 
             var verses = numbers.map(function (number) {
